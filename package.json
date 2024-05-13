@@ -1,0 +1,19 @@
+{
+  "name": "ms-oauth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/XavierEr/ms-oauth.git"
+  },
+  "author": "XavierEr",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/XavierEr/ms-oauth/issues"
+  },
+  "homepage": "https://github.com/XavierEr/ms-oauth#readme"
+}
