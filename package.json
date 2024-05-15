@@ -2,8 +2,15 @@
   "name": "ms-oauth",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "engines": {
+    "node": ">=20.13.1"
+  },
+  "private": true,
+  "type": "module",
+  "main": "./dist/app.js",
   "scripts": {
+    "start": "npm run build:prod && node ./dist/app.js",
+    "build:prod": "rm -rf ./dist && tsc --project tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,10 +24,15 @@
   },
   "homepage": "https://github.com/XavierEr/ms-oauth#readme",
   "dependencies": {
+    "axios": "^1.6.8",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
+    "@types/node": "^20.12.11",
     "typescript": "^5.4.5"
   }
 }
