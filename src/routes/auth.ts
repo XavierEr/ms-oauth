@@ -9,8 +9,8 @@ import {
 
 import { getToken } from '../apis/msAPIs.js';
 
-// const SCOPE = ['openid', 'profile', 'email', 'offline_access'];
-const SCOPE = ['openid'];
+const SCOPE = ['openid', 'profile', 'email', 'offline_access'];
+// const SCOPE = ['openid'];
 
 const router = express.Router();
 
