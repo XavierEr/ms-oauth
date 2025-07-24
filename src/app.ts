@@ -10,21 +10,17 @@ import express from 'express';
 import session,
 { type SessionOptions } from 'express-session';
 import RedisStore from 'connect-redis';
-import { createClient } from 'redis';
+
+import redisClient from './utils/redisClient.js';
 
 import authRouter from './routes/auth.js';
+import dgpRouter from './routes/dgp.js';
+import wellKnownRouter from './routes/wellKnown.js';
 import heartbeatRouter from './routes/heartbeat.js';
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
 const app = express();
-
-const redisClient = createClient({
-  url: process.env.REDIS_URL
-});
-redisClient.on('error', (error: Error) => console.error(error));
-redisClient.on('end', () => console.log('Redis disconnected.'));
-redisClient.connect();
 
 // Initialize store.
 const redisStore = new RedisStore({
@@ -52,6 +48,8 @@ app.use(session(sessionConfig));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRouter);
+app.use('/dgp', dgpRouter);
+app.use('/.well-known', wellKnownRouter);
 app.use('/heartbeat', heartbeatRouter);
 
 const options = {
@@ -59,31 +57,36 @@ const options = {
   cert: fs.readFileSync(path.resolve(__dirname, process.env.CERTIFICATE_PATH!)),
 };
 
-const server = https.createServer(options, app).listen(app.get('port'), () => {
+https.createServer(options, app).listen(app.get('port'), () => {
   console.log(`Node app listening on port`, app.get('port'));
   console.log(`Node environment`, process.env.NODE_ENV || 'development');
 });
 
-function shutdownServer() {
-  try {
-    server.close(async () => {
-      console.log('HTTPS server closed.');
+// const server = https.createServer(options, app).listen(app.get('port'), () => {
+//   console.log(`Node app listening on port`, app.get('port'));
+//   console.log(`Node environment`, process.env.NODE_ENV || 'development');
+// });
 
-      await redisClient.quit();
+// function shutdownServer() {
+//   try {
+//     server.close(async () => {
+//       console.log('HTTPS server closed.');
 
-      process.exit(0);
-    });
-  } catch (error) {
-    process.exit(1);
-  }
-}
+//       await redisClient.quit();
 
-process.on('SIGINT', () => {
-  shutdownServer();
-});
+//       process.exit(0);
+//     });
+//   } catch (error) {
+//     process.exit(1);
+//   }
+// }
 
-process.on('SIGTERM', () => {
-  shutdownServer();
-});
+// process.on('SIGINT', () => {
+//   shutdownServer();
+// });
+
+// process.on('SIGTERM', () => {
+//   shutdownServer();
+// });
 
 export default app;
